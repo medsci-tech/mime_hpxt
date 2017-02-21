@@ -1,0 +1,1 @@
+[21-Feb-2017 02:47:02 UTC] PHP Fatal error:  Cannot use Route as Route because the name is already in use in D:\web\mime_hpxt\app\Providers\RouteServiceProvider.php on line 7
