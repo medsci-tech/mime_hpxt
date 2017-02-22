@@ -17,17 +17,18 @@ use Dingo\Api\Http\FormRequest;
 $api = app('api.router');
 $api->version('v1', function ($api) {
     $api->group(['namespace' => 'App\Http\Controllers\Api\V1','middleware' => []], function ($api) {
-        $api->get('tests', 'TestsController@index');
-        $api->get('users','TestsController@users');
+
     });
+    $api->group(['prefix' => 'user','namespace' => 'App\Http\Controllers\Api\V1'], function ($api) {
+    $api->post('/', 'UserController@store'); // 注册
+
+    $api->get('tests/{id}', 'TestsController@show');
+    $api->get('user/me', 'AuthController@AuthenticatedUser'); //根据
+    });
+
 });
-//$api = app('Dingo\Api\Routing\Router');
-//$api->version('v1', function ($api) {
-//    $api->group(['namespace' => 'App\Http\Controllers\Api','middleware' => ['']], function ($api) {
-//            //路径为 /api/tests
-//            $api->get('tests', 'TestsController@index');
-//        });
-//    });
+
+
 
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();
