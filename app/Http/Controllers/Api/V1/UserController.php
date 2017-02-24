@@ -19,15 +19,15 @@ class UserController extends BaseController
     {
         $rules = [
             'phone'=>'required|digits:11|unique:users,phone',
-            'password'=>'required|between:6,20',
+            //'password'=>'required|between:6,20',
             'code'=>'required|between:6,6'
         ];
         $message = [
             'phone.required'=>'电话号码不能为空！',
             'phone.digits'=>'电话号码必须11位！',
             'phone.unique'=>'该手机号已经存在！',
-            'password.required'=>'密码不能为空！',
-            'password.between'=>'密码必须在6-20位之间！',
+           // 'password.required'=>'密码不能为空！',
+           // 'password.between'=>'密码必须在6-20位之间！',
             'code.required'=>'验证码不能为空！',
             'code.between'=>'验证码必须为6位！',
         ];
