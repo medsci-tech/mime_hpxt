@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Dingo\Api\Http\FormRequest;
-
+use App\User;
 class UserController extends BaseController
 {
 
@@ -37,41 +37,75 @@ class UserController extends BaseController
         $messages = $validator->errors();
         /* 输出错误消息 */
         foreach ($messages->get('phone') as $message) {
-            return $message;
+            return ['status_code' => 0,'message' =>$message];
         }
         foreach ($messages->get('password') as $message) {
-            return $message;
+            return ['status_code' => 0,'message' =>$message];
         }
         foreach ($messages->get('code') as $message) {
-            return $message;
+            return ['status_code' => 0,'message' =>$message];
+        }
+        /* 验证码验证 */
+        $auth_code = \Cache::get($request->phone);
+        if ($request->code != $auth_code || $request->input('code') == '000000') {
+            return ['status_code' => 0,'message' =>'验证码不匹配'];
         }
 
-
-
-        return $request->phone;
-
-        $validator = \Validator::make($request->all(), [
-            'phone' => 'required|digits:11',
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'error_messages' => '无效的手机号码!'
-            ]);
-        }
-        $newUser = [
-            'phone' => $request->get('phone'),
-            'user_name' => $request->get('name'),
-            'password' => bcrypt($request->get('password'))
+        /* 注册用用户 */
+        $data = $request->all();
+        $data = array_except($data, ['password','code']);
+        $data['password'] = Hash::make(env('SECRET_DEFAULT'));
+        $model = new \App\User();
+        $model->fill($data);
+        $model->save();
+        $response = [
+            'status_code' => 200,
+            'message' => '注册成功!',
         ];
-        $user = Client::create($newUser);
-        $token = JWTAuth::fromUser($user);
-        return $token;
+        return $response;
     }
+
+    /**
+     * 检查用户是否注册.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function isRegister(Request $request) {
+        $rules = [
+            'openid'=>'required',
+           // 'unionid'=>'required|between:6,20',
+        ];
+        $message = [
+            'openid.required'=>'openid不能为空！',
+        ];
+        $validator = \Validator::make($request->all(),$rules,$message);
+        $messages = $validator->messages()->first();
+        $response = [
+            'status_code' => 200,
+            'message' =>  $messages.$request->openid,
+        ];
+        $user = \App\User::where('openid', $request->openid)->first();
+        if($user)
+            $response = [
+                'status_code' => 0,
+                'message' =>  '用户已经注册!',
+            ];
+        else
+            $response = [
+                'status_code' => 200,
+                'message' =>  '用户尚未注册!!',
+            ];
+
+        return $response;
+
+    }
+
     public function show($id)
     {
         $user = User::findOrFail($id);
 
         return $this->response->array($user->toArray());
     }
+
 }

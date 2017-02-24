@@ -164,6 +164,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         Dingo\Api\Provider\LaravelServiceProvider::class,
+
         //Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
 
         /*
@@ -179,6 +180,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\MessageServiceProvider::class,
 
     ],
 
@@ -228,6 +230,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Helper'        => App\Helper\Facades\Helper::class,
+        'MessageSender' => App\Message\Facades\MessageSender::class,
        // 'JWTAuth'=> Tymon\JWTAuth\Facades\JWTAuth::class,
        // 'JWTFactory'=> Tymon\JWTAuth\Facades\JWTFactory::class,
 
