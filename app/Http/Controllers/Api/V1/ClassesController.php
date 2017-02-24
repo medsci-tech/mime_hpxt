@@ -17,4 +17,11 @@ class ClassesController extends BaseController
         return ['status_code' => 200,'message' =>'班级列表','data'=> $lists];
     }
 
+    public function show(Request $request)
+    {
+        $model = new \App\Model\Classes;
+        $lists =  $model->orderBy('id', 'desc')->take(10)->get()->toArray();
+        return ['status_code' => 200,'message' =>'班级列表','data'=> $lists];
+    }
+
 }
