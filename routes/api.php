@@ -22,9 +22,10 @@ $api->version('v1', function ($api) {
     $api->group(['prefix' => 'user','namespace' => 'App\Http\Controllers\Api\V1'], function ($api)
     {
         $api->post('/', 'UserController@store'); // 注册
+        $api->post('/show', 'ClassesController@show'); // 班级介绍
         $api->post('/is-register', 'UserController@isRegister'); // 注册验证
         $api->get('tests', 'TestsController@users');
-        $api->get('classes/', 'ClassesController@lists'); //班级列表
+        $api->post('classes/', 'ClassUserController@lists'); //班级列表
         $api->post('join-class/', 'ClassUserController@store'); //班级加入
     });
 

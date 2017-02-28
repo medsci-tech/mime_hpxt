@@ -76,5 +76,37 @@ class ClassUserController extends BaseController
 
     }
 
+    /**
+     * 加入的班级列表
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function lists(Request $request)
+    {
+        $openid = $request->openid;
+        $user = User::where('openid', $openid)->first();
+        if($user)
+        {
+            $model =  new ClassUsers;
+            $lists =  $model->where('uid', $user->id)->orderBy('id', 'desc')->get()->toArray();
+            $c_id_arr = array_pluck($lists, 'c_id');
+            $data = Classes::whereIn('c_id', $c_id_arr)->get()->toArray();
+            if(!$data) $data = null;
+            $response = [
+                'status_code' => 200,
+                'message' =>  '班级列表!',
+                'data' =>  $data,
+            ];
+        }
+        else
+            $response = [
+                'status_code' => 0,
+                'message' =>  '用户不存在!',
+            ];
+
+        return $response;
+    }
+
 
 }
