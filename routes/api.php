@@ -27,6 +27,7 @@ $api->version('v1', function ($api) {
         $api->get('tests', 'TestsController@users');
         $api->post('classes/', 'ClassUserController@lists'); //班级列表
         $api->post('join-class/', 'ClassUserController@store'); //班级加入
+        $api->post('/all-users', 'ClassUserController@allUsers'); //班级加入
     });
 
 });

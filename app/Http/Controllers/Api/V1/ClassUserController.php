@@ -108,5 +108,60 @@ class ClassUserController extends BaseController
         return $response;
     }
 
+    /**
+     * 班级下的用户
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function allUsers(Request $request)
+    {
+        $rules = [
+            'openid'=>'required',
+            'c_id'=>'required|exists:classes,c_id',
+        ];
+        $message = [
+            'openid.required'=>'openid不能为空！',
+            'c_id.required'=>'班级c_id不能为空！',
+            'c_id.exists'=>'班级c_id不存在！',
+        ];
+        $validator = \Validator::make($request->all(),$rules,$message);
+        $messages = $validator->messages()->first();
+        $response = [
+            'status_code' => 200,
+            'message' =>  $messages.$request->openid,
+        ];
+        $messages = $validator->errors();
+        /* 输出错误消息 */
+        foreach ($messages->get('openid') as $message) {
+            return ['status_code' => 0,'message' =>$message];
+        }
+        foreach ($messages->get('c_id') as $message) {
+            return ['status_code' => 0,'message' =>$message];
+        }
+        $model =  new ClassUsers;
+        $lists =  $model->where('c_id', $request->c_id)->orderBy('id', 'desc')->get()->toArray();
+        $uid_arr = array_pluck($lists, 'uid'); // 班级所有用户
+        if($uid_arr)
+        {
+            $data = User::whereIn('id', $uid_arr)->get()->toArray();
+            $classes = Classes::where('c_id', $request->c_id)->first();
+            $response = [
+                'status_code' => 200,
+                'message' =>  '班级用户!',
+                'class_name' => $classes->class_name,
+                'data' =>  $data,
+            ];
+        }
+        else
+            $response = [
+                'status_code' => 0,
+                'message' =>  '班级用户为空!',
+                'data' =>  null,
+            ];
+
+        return $response;
+    }
+
 
 }
