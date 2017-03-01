@@ -58,9 +58,16 @@ class UserController extends BaseController
         $model = new \App\User();
         $model->fill($data);
         $model->save();
+        $insertedId = $model->id;
         $response = [
             'status_code' => 200,
             'message' => '注册成功!',
+            'data' =>  [
+                'uid'=>$insertedId,
+                'openid'=>$model->openid,
+                'nickname'=>$model->nickname,
+                'headimgurl'=>$model->headimgurl,
+            ],
         ];
         return $response;
     }
@@ -85,11 +92,12 @@ class UserController extends BaseController
             'status_code' => 200,
             'message' =>  $messages.$request->openid,
         ];
-        $user = \App\User::where('openid', $request->openid)->first();
+        $user = \App\User::select(['id as uid','openid','nickname','headimgurl'])->where('openid', $request->openid)->first();
         if($user)
             $response = [
                 'status_code' => 0,
                 'message' =>  '用户已经注册!',
+                'data' =>  $user,
             ];
         else
             $response = [

@@ -144,7 +144,7 @@ class ClassUserController extends BaseController
         $uid_arr = array_pluck($lists, 'uid'); // 班级所有用户
         if($uid_arr)
         {
-            $data = User::whereIn('id', $uid_arr)->get()->toArray();
+            $data = User::select(['id as uid','openid','nickname','headimgurl'])->whereIn('id', $uid_arr)->get()->toArray();
             $classes = Classes::where('c_id', $request->c_id)->first();
             $response = [
                 'status_code' => 200,
