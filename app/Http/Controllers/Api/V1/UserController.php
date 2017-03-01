@@ -102,7 +102,7 @@ class UserController extends BaseController
         else
             $response = [
                 'status_code' => 200,
-                'message' =>  '用户尚未注册!!',
+                'message' =>  '用户尚未注册!',
             ];
 
         return $response;

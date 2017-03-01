@@ -70,7 +70,10 @@ class ClassUserController extends BaseController
         }
         $response = [
             'status_code' => 200,
-            'message' =>  '加入成功!!',
+            'message' =>  '加入成功!',
+            'data' =>  [
+                'c_id'=>$c_id,
+            ],
         ];
         return $response;
 
